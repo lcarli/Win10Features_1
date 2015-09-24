@@ -1,26 +1,41 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using System.Linq;
+using Windows.Storage;
 
 namespace NavPaneApp1.Views
 {
+    public class Palestrante
+    {
+        public string nome { get; set; }
+        public string imageUri { get; set; }
+    }
 
     public sealed partial class Page2 : Page
     {
-        ObservableCollection<string> _reference;
-        ObservableCollection<string> _selection;
+        List<Palestrante> ListSource;
+        List<Palestrante> ListDestination;
         string _deletedItem;
 
         public Page2()
         {
             this.InitializeComponent();
-            _reference = GetSampleData();
-            _selection = new ObservableCollection<string>();
-            SourceListView.ItemsSource = _reference;
-            TargetListView.ItemsSource = _selection;
+            ListSource = new List<Palestrante>();
+            ListDestination = new List<Palestrante>();
+            ListSource.Add(new Palestrante() { nome = "CURURU 1", imageUri = "/Assets/mri.jpg" });
+            ListSource.Add(new Palestrante() { nome = "CURURU 2", imageUri = "/Assets/mri.jpg" });
+            ListSource.Add(new Palestrante() { nome = "CURURU 3", imageUri = "/Assets/mri.jpg" });
+            ListDestination.Add(new Palestrante() { nome = "CURURU 3", imageUri = "/Assets/mri.jpg" });
+
+            //_reference = GetSampleData();
+            //_selection = new ObservableCollection<string>();
+            SourceListView.ItemsSource = ListSource;
+            //TargetListView.ItemsSource = ListDestination;
         }
 
         private ObservableCollection<string> GetSampleData()
@@ -46,15 +61,18 @@ namespace NavPaneApp1.Views
         /// <param name="e"></param>
         private void SourceListView_DragItemsStarting(object sender, DragItemsStartingEventArgs e)
         {
-            // Prepare a string with one dragged item per line
-            var items = new StringBuilder();
-            foreach (var item in e.Items)
-            {
-                if (items.Length > 0) items.AppendLine();
-                items.Append(item as string);
-            }
-            // Set the content of the DataPackage
-            e.Data.SetText(items.ToString());
+            var items = string.Join(",", e.Items.Cast<Palestrante>().Select(i => i.nome));
+            e.Data.SetText(items);
+            //e.Data.SetData("StandardDataFormats.Storage", )
+            //// Prepare a string with one dragged item per line
+            //var items = new StringBuilder();
+            //foreach (var item in e.Items)
+            //{
+            //    if (items.Length > 0) items.AppendLine();
+            //    items.Append(item as string);
+            //}
+            //// Set the content of the DataPackage
+            //e.Data.SetText(items.ToString());
             // As we want our Reference list to say intact, we only allow Copy
             e.Data.RequestedOperation = DataPackageOperation.Copy;
         }
@@ -80,19 +98,24 @@ namespace NavPaneApp1.Views
         /// <param name="e"></param>
         private async void TargetListView_Drop(object sender, DragEventArgs e)
         {
-            // This test is in theory not needed as we returned DataPackageOperation.None if
-            // the DataPackage did not contained text. However, it is always better if each
-            // method is robust by itself
             if (e.DataView.Contains(StandardDataFormats.Text))
             {
-                // We need to take a Deferral as we won't be able to confirm the end
-                // of the operation synchronously
                 var def = e.GetDeferral();
-                var s = await e.DataView.GetTextAsync();
-                var items = s.Split('\n');
-                foreach (var item in items)
+                var id = await e.DataView.GetTextAsync();
+                var itemIdsToMove = id.Split(',');
+
+                var destinationListView = sender as ListView;
+                var listViewItemsSource = destinationListView?.ItemsSource as List<Palestrante>;
+
+                if (listViewItemsSource != null)
                 {
-                    _selection.Add(item);
+                    foreach (var itemId in itemIdsToMove)
+                    {
+                        var itemToMove = ListSource.First(i => i.nome.ToString() == itemId);
+
+                        ListDestination.Add(itemToMove);
+                        //ListSource.Remove(itemToMove);
+                    }
                 }
                 e.AcceptedOperation = DataPackageOperation.Copy;
                 def.Complete();
@@ -131,7 +154,7 @@ namespace NavPaneApp1.Views
             // Another solution would be to listen for events in the ObservableCollection
             if (_deletedItem != null)
             {
-                _selection.Remove(_deletedItem);
+                //ListDestination.Remove(_deletedItem);
                 _deletedItem = null;
             }
         }

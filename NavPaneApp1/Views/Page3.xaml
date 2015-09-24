@@ -6,8 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    
-       <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -22,15 +22,16 @@
             <TextBlock TextWrapping="Wrap" Text="Este exemplo mostra como usar Tile e os métodos de notificação"/>
         </StackPanel>
         <StackPanel Grid.Row="1" Margin="10,0,0,10">
+            <StackPanel.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Margin" Value="0,10,0,0"/>
+                </Style>
+            </StackPanel.Resources>
             <TextBlock Text="Atualização Local do Tile e Notificação Local com Toast " />
             <Button x:Name="btnLocalTile" Content="Local Tile"  Click="button_Click" VerticalAlignment="Top" HorizontalAlignment="Left" Width="104"/>
             <Button x:Name="btnLocatToast" Content="Local Toast"  HorizontalAlignment="Left" Width="104" Click="btnLocatToast_Click"/>
-           
+            <Button x:Name="btnLocatToastWithAction" Content="Local Toast com Action"  HorizontalAlignment="Left" Width="200" Click="btnLocatToastWithAction_Click"/>
+            <!--<Button x:Name="btnLocatToastWithAction2" Content="Local Toast com Action 2"  HorizontalAlignment="Left" Width="200" Click="btnLocatToastWithAction_Click_1"/>-->
         </StackPanel>
-
-   
-
-
-
     </Grid>
 </Page>

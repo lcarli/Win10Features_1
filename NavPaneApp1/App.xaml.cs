@@ -1,11 +1,18 @@
-﻿using System;
+﻿using Microsoft.WindowsAzure.MobileServices;
+using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation.Metadata;
+using Windows.Networking.Connectivity;
+using Windows.Networking.PushNotifications;
 using Windows.Phone.UI.Input;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
+using NotificationsExtensions.Toasts; // NotificationsExtensions.Win10
+using Microsoft.QueryStringDotNET;
 
 namespace NavPaneApp1
 {
@@ -14,6 +21,9 @@ namespace NavPaneApp1
     /// </summary>
     sealed partial class App : Application
     {
+        public static MobileServiceClient MobileService = new MobileServiceClient("https://pushteste.azure-mobile.net/",
+                        "IvphFCBosbDnVLaMuCdrCGGHVbzydY85");
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -24,12 +34,45 @@ namespace NavPaneApp1
             this.Suspending += OnSuspending;
         }
 
+        public static bool ConnectedToInternet()
+        {
+            ConnectionProfile InternetConnectionProfile = NetworkInformation.GetInternetConnectionProfile();
+
+            if (InternetConnectionProfile == null)
+            {
+                return false;
+            }
+
+            var level = InternetConnectionProfile.GetNetworkConnectivityLevel();
+            return level == NetworkConnectivityLevel.InternetAccess;
+        }
+
+        private async Task InitNotificationsAsync()
+        {
+            try
+            {
+                var channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
+                await App.MobileService.GetPush().RegisterNativeAsync(channel.Uri);
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
+            }
+
+        }
+
+        private void Channel_PushNotificationReceived(PushNotificationChannel sender, PushNotificationReceivedEventArgs args)
+        {
+            var text = args.NotificationType.ToString();
+            var t = args.ToastNotification.Content.ToString();
+        }
+
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
@@ -37,6 +80,18 @@ namespace NavPaneApp1
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
+
+            if (ConnectedToInternet())
+            {
+                try
+                {
+                    await InitNotificationsAsync();
+                }
+                catch (Exception)
+                {
+                    Debug.WriteLine("The app do not have connection with internet.");
+                }
+            }
 
             AppShell shell = Window.Current.Content as AppShell;
 
@@ -94,6 +149,19 @@ namespace NavPaneApp1
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();
+        }
+
+        protected override void OnActivated(IActivatedEventArgs args)
+        {
+            //Initialize your app if it's not yet initialized;
+            //Find out if this is activated from a toast;
+            if (args.Kind == ActivationKind.ToastNotification)
+            {
+                //Get the pre-defined arguments and user inputs from the eventargs;
+                var toastArgs = args as ToastNotificationActivatedEventArgs;
+                var arguments = toastArgs.Argument;
+                var input = toastArgs.UserInput["Video"];
+            } 
         }
     }
 }

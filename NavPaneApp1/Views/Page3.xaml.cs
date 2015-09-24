@@ -52,7 +52,70 @@ namespace NavPaneApp1.Views
 
             ToastNotification toast = new ToastNotification(toastXml);
             ToastNotificationManager.CreateToastNotifier().Show(toast);
+        }
 
+        private void teste()
+        {
+            string title = "Você tem uma reserva";
+            string content = "Check this out, Happy Canyon in Utah!";
+            string image = "http://blogs.msdn.com/cfs-filesystemfile.ashx/__key/communityserver-blogs-components-weblogfiles/00-00-01-71-81-permanent/2727.happycanyon1_5B00_1_5D00_.jpg";
+
+            string toastActions2 =
+            $@"<toast>
+                <visual>
+                    <binding template='ToastGeneric'>
+                        <text>{title}</text>
+                        <text>{content}</text>
+                        <image src='{image}' placement='appLogoOverride' hint-crop='circle'/>
+                    </binding>
+                </visual>
+                <actions>
+                    <input id = 'time' type = 'selection' defaultInput='2'  />
+                    <selection id = '1' content='Café da manhã' />
+                    <selection id = '2' content = 'Almoço' />
+                    <selection id = '3' content = 'Jantar' />
+                    <action activationType = 'background' content = 'Reserve' arguments = 'reservar' />
+                    <action activationType = 'foreground' content = 'Ligar para o restaurante' arguments = 'ligar' />
+                </actions>
+            </toast>";
+
+            XmlDocument x2 = new XmlDocument();
+            x2.LoadXml(toastActions2);
+            ToastNotification t2 = new ToastNotification(x2);
+            ToastNotificationManager.CreateToastNotifier().Show(t2);
+        }
+
+        private void btnLocatToastWithAction_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            string title = "Você recebeu uma imagem";
+            string content = "Check this out, Happy Canyon in Utah!";
+            string image = "http://blogs.msdn.com/cfs-filesystemfile.ashx/__key/communityserver-blogs-components-weblogfiles/00-00-01-71-81-permanent/2727.happycanyon1_5B00_1_5D00_.jpg";
+
+            string toastActions =
+            $@"<toast>
+                <visual>
+                    <binding template='ToastGeneric'>
+                        <text>{title}</text>
+                        <text>{content}</text>
+                        <image src='{image}' placement='appLogoOverride' hint-crop='circle'/>
+                    </binding>
+                </visual>
+                <actions>
+                    <input id = 'message' type = 'text' placeholderContent = 'reply here' />
+                    <action activationType = 'background' content = 'reply' arguments = 'reply' />
+                    <action activationType = 'foreground' content = 'video call' arguments = 'video' />
+                </actions>
+            </toast>";
+
+            XmlDocument x = new XmlDocument();
+            x.LoadXml(toastActions);
+            ToastNotification t = new ToastNotification(x);
+            ToastNotificationManager.CreateToastNotifier().Show(t);
+        }
+
+        private void btnLocatToastWithAction_Click_1(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            teste();
         }
     }
 }
