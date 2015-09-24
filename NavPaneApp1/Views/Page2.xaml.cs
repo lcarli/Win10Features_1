@@ -18,24 +18,20 @@ namespace NavPaneApp1.Views
 
     public sealed partial class Page2 : Page
     {
-        List<Palestrante> ListSource;
-        List<Palestrante> ListDestination;
+        ObservableCollection<Palestrante> ListSource;
+        ObservableCollection<Palestrante> ListDestination;
         string _deletedItem;
 
         public Page2()
         {
             this.InitializeComponent();
-            ListSource = new List<Palestrante>();
-            ListDestination = new List<Palestrante>();
+            ListSource = new ObservableCollection<Palestrante>();
+            ListDestination = new ObservableCollection<Palestrante>();
             ListSource.Add(new Palestrante() { nome = "CURURU 1", imageUri = "/Assets/mri.jpg" });
             ListSource.Add(new Palestrante() { nome = "CURURU 2", imageUri = "/Assets/mri.jpg" });
             ListSource.Add(new Palestrante() { nome = "CURURU 3", imageUri = "/Assets/mri.jpg" });
-            ListDestination.Add(new Palestrante() { nome = "CURURU 3", imageUri = "/Assets/mri.jpg" });
 
-            //_reference = GetSampleData();
-            //_selection = new ObservableCollection<string>();
             SourceListView.ItemsSource = ListSource;
-            //TargetListView.ItemsSource = ListDestination;
         }
 
         private ObservableCollection<string> GetSampleData()
@@ -63,17 +59,6 @@ namespace NavPaneApp1.Views
         {
             var items = string.Join(",", e.Items.Cast<Palestrante>().Select(i => i.nome));
             e.Data.SetText(items);
-            //e.Data.SetData("StandardDataFormats.Storage", )
-            //// Prepare a string with one dragged item per line
-            //var items = new StringBuilder();
-            //foreach (var item in e.Items)
-            //{
-            //    if (items.Length > 0) items.AppendLine();
-            //    items.Append(item as string);
-            //}
-            //// Set the content of the DataPackage
-            //e.Data.SetText(items.ToString());
-            // As we want our Reference list to say intact, we only allow Copy
             e.Data.RequestedOperation = DataPackageOperation.Copy;
         }
 
@@ -105,15 +90,14 @@ namespace NavPaneApp1.Views
                 var itemIdsToMove = id.Split(',');
 
                 var destinationListView = sender as ListView;
-                var listViewItemsSource = destinationListView?.ItemsSource as List<Palestrante>;
+                var listViewItemsSource = destinationListView?.ItemsSource as ObservableCollection<Palestrante>;
 
                 if (listViewItemsSource != null)
                 {
                     foreach (var itemId in itemIdsToMove)
                     {
                         var itemToMove = ListSource.First(i => i.nome.ToString() == itemId);
-
-                        ListDestination.Add(itemToMove);
+                        listViewItemsSource.Add(itemToMove);
                         //ListSource.Remove(itemToMove);
                     }
                 }
@@ -135,8 +119,8 @@ namespace NavPaneApp1.Views
             // But we want the code to be robust
             if (e.Items.Count == 1)
             {
-                e.Data.SetText(e.Items[0] as string);
-                // Reorder or move to trash are always a move
+                var items = string.Join(",", e.Items.Cast<Palestrante>().Select(i => i.nome));
+                e.Data.SetText(items);
                 e.Data.RequestedOperation = DataPackageOperation.Move;
                 _deletedItem = null;
             }
@@ -183,10 +167,22 @@ namespace NavPaneApp1.Views
         {
             if (e.DataView.Contains(StandardDataFormats.Text))
             {
-                // We need to take the deferral as the source will read _deletedItem which
-                // we cannot set synchronously
                 var def = e.GetDeferral();
-                _deletedItem = await e.DataView.GetTextAsync();
+                var id = await e.DataView.GetTextAsync();
+                var itemIdsToMove = id.Split(',');
+
+                var destinationListView = sender as ListView;
+                var listViewItemsSource = destinationListView?.ItemsSource as ObservableCollection<Palestrante>;
+
+                if (listViewItemsSource != null)
+                {
+                    foreach (var itemId in itemIdsToMove)
+                    {
+                        var itemToMove = ListDestination.First(i => i.nome.ToString() == itemId);
+                        listViewItemsSource.Remove(itemToMove);
+                        ListDestination.Remove(itemToMove);
+                    }
+                }
                 e.AcceptedOperation = DataPackageOperation.Move;
                 def.Complete();
             }
