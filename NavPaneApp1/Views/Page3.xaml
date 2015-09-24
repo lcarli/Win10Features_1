@@ -26,6 +26,9 @@
                 <Style TargetType="Button">
                     <Setter Property="Margin" Value="0,10,0,0"/>
                 </Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Margin" Value="0,10,0,0"/>
+                </Style>
             </StackPanel.Resources>
             <TextBlock Text="Atualização Local do Tile e Notificação Local com Toast " />
             <Button x:Name="btnLocalTile" Content="Local Tile"  Click="button_Click" VerticalAlignment="Top" HorizontalAlignment="Left" Width="104"/>

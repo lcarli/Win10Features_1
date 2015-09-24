@@ -190,7 +190,7 @@ namespace NavPaneApp1
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="listViewItem"></param>
-        private async void NavMenuList_ItemInvoked(object sender, ListViewItem listViewItem)
+        public async void NavMenuList_ItemInvoked(object sender, ListViewItem listViewItem)
         {
             var item = (NavMenuItem)((NavMenuListView)sender).ItemFromContainer(listViewItem);
 

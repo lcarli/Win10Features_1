@@ -13,6 +13,8 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
 using NotificationsExtensions.Toasts; // NotificationsExtensions.Win10
 using Microsoft.QueryStringDotNET;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Popups;
 
 namespace NavPaneApp1
 {
@@ -151,7 +153,7 @@ namespace NavPaneApp1
             deferral.Complete();
         }
 
-        protected override void OnActivated(IActivatedEventArgs args)
+        protected async override void OnActivated(IActivatedEventArgs args)
         {
             //Initialize your app if it's not yet initialized;
             //Find out if this is activated from a toast;
@@ -160,7 +162,9 @@ namespace NavPaneApp1
                 //Get the pre-defined arguments and user inputs from the eventargs;
                 var toastArgs = args as ToastNotificationActivatedEventArgs;
                 var arguments = toastArgs.Argument;
-                var input = toastArgs.UserInput["Video"];
+                //var input = toastArgs.UserInput["Video"];
+                MessageDialog m = new MessageDialog(arguments);
+                await m.ShowAsync();
             } 
         }
     }
