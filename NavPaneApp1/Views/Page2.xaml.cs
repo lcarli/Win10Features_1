@@ -171,8 +171,7 @@ namespace NavPaneApp1.Views
                 var id = await e.DataView.GetTextAsync();
                 var itemIdsToMove = id.Split(',');
 
-                var destinationListView = sender as ListView;
-                var listViewItemsSource = destinationListView?.ItemsSource as ObservableCollection<Palestrante>;
+                var listViewItemsSource = TargetListView.ItemsSource as ObservableCollection<Palestrante>;
 
                 if (listViewItemsSource != null)
                 {
