@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="90544c19-e66c-476f-8605-a3d6ccb3dff2" Publisher="CN=rogerioc" Version="1.0.0.0" />
+  <Identity Name="56940Lcarli.DemoNavPane" Publisher="CN=8C3856B6-F236-490F-8FF8-E911B3BC3B57" Version="1.1.0.0" />
   <mp:PhoneIdentity PhoneProductId="90544c19-e66c-476f-8605-a3d6ccb3dff2" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>NavPaneApp1</DisplayName>
-    <PublisherDisplayName>rogerioc</PublisherDisplayName>
+    <DisplayName>DemoNavPane</DisplayName>
+    <PublisherDisplayName>Lcarli</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
