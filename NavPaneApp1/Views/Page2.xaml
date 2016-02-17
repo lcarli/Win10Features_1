@@ -7,7 +7,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-
+    <Page.Resources>
+        <DataTemplate x:Key="MyItemDataTemplate" x:DataType="local:MyItem">
+            <StackPanel>
+                <Image Source="{x:Bind Image}" Margin="20" />
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -89,5 +95,10 @@
                     DragEnter="TargetTextBlock_DragEnter"
                     Drop="TargetTextBlock_Drop"
                     FontFamily="Segoe MDL2 Assets" Text="&#xE74D;" FontSize="50" />
+        <ListView x:Name="imageContainer" AllowDrop="True"
+           Grid.Column="0" Grid.Row="3" Height="200" Width="200"
+           Drop="imageContainer_Drop" DragEnter="imageContainer_DragEnter"  
+            ItemsSource="{x:Bind MyItems}" 
+          ItemTemplate="{StaticResource MyItemDataTemplate}" />
     </Grid>
 </Page>

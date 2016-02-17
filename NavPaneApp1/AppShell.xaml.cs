@@ -43,12 +43,12 @@ namespace NavPaneApp1
                     Label = "Adaptative Tile",
                     DestinationPage = typeof(Views.Page3)
                 },
-                new NavMenuItem()
-                {
-                    Symbol = Symbol.PostUpdate,
-                    Label = "Notification",
-                    DestinationPage = typeof(Views.Page3)
-                },
+                //new NavMenuItem()
+                //{
+                //    Symbol = Symbol.PostUpdate,
+                //    Label = "Notification",
+                //    DestinationPage = typeof(Views.Page3)
+                //},
                 //new NavMenuItem()
                 //{
                 //    Symbol = Symbol.Link,

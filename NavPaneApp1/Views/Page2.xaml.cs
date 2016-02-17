@@ -7,6 +7,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using System.Linq;
 using Windows.Storage;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace NavPaneApp1.Views
 {
@@ -20,6 +21,7 @@ namespace NavPaneApp1.Views
     {
         ObservableCollection<Palestrante> ListSource;
         ObservableCollection<Palestrante> ListDestination;
+        public ObservableCollection<MyItem> MyItems { get; private set; } = new ObservableCollection<MyItem>();
         string _deletedItem;
 
         public Page2()
@@ -27,9 +29,9 @@ namespace NavPaneApp1.Views
             this.InitializeComponent();
             ListSource = new ObservableCollection<Palestrante>();
             ListDestination = new ObservableCollection<Palestrante>();
-            ListSource.Add(new Palestrante() { nome = "CURURU 1", imageUri = "/Assets/mri.jpg" });
-            ListSource.Add(new Palestrante() { nome = "CURURU 2", imageUri = "/Assets/mri.jpg" });
-            ListSource.Add(new Palestrante() { nome = "CURURU 3", imageUri = "/Assets/mri.jpg" });
+            ListSource.Add(new Palestrante() { nome = "Sample Text 1", imageUri = "/Assets/mri.jpg" });
+            ListSource.Add(new Palestrante() { nome = "Sample Text 2", imageUri = "/Assets/blueback.jpg" });
+            ListSource.Add(new Palestrante() { nome = "Sample Text 3", imageUri = "/Assets/redWide.png" });
 
             SourceListView.ItemsSource = ListSource;
         }
@@ -185,6 +187,35 @@ namespace NavPaneApp1.Views
                 e.AcceptedOperation = DataPackageOperation.Move;
                 def.Complete();
             }
+        }
+
+        private async void imageContainer_Drop(object sender, DragEventArgs e)
+        {
+            if (e.DataView.Contains(StandardDataFormats.StorageItems))
+            {
+                var storageItems = await e.DataView.GetStorageItemsAsync();
+
+                foreach (StorageFile storageItem in storageItems)
+                {
+                    var bitmapImage = new BitmapImage();
+                    await bitmapImage.SetSourceAsync(await storageItem.OpenReadAsync());
+
+                    var myItem = new MyItem
+                    {
+                        Id = Guid.NewGuid(),
+                        Image = bitmapImage
+                    };
+
+                    this.MyItems.Add(myItem);
+
+                }
+            }
+        }
+
+        private void imageContainer_DragEnter(object sender, DragEventArgs e)
+        {
+            e.AcceptedOperation = DataPackageOperation.Copy;
+            e.DragUIOverride.Caption = "Coloque o item aqui para copiá-lo para sua aplicação";
         }
     }
 }

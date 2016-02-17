@@ -7,8 +7,8 @@
     <ProjectGuid>{5057CEA7-AB0A-40B5-AD45-B9AC7C4C1954}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NavPaneApp1</RootNamespace>
-    <AssemblyName>NavPaneApp1</AssemblyName>
+    <RootNamespace>Win10Features</RootNamespace>
+    <AssemblyName>Windows 10 Features</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.10240.0</TargetPlatformVersion>
@@ -103,6 +103,7 @@
     <Compile Include="Controls\PageHeader.xaml.cs">
       <DependentUpon>PageHeader.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MyItem.cs" />
     <Compile Include="Views\DynamicCommandBar.cs" />
     <Compile Include="NavMenuItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
