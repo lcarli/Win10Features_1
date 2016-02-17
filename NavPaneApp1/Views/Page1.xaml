@@ -10,7 +10,7 @@
 
     <Grid EntranceNavigationTransitionInfo.IsTargetElement="True">
         <Image Source="ms-appx:///Assets/mri.jpg" HorizontalAlignment="Left" VerticalAlignment="Top"/>  
-
+            <!--teste-->
         <!--<TextBlock Style="{ThemeResource TitleTextBlockStyle}" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Page 1 Content"/>-->
         <InkCanvas x:Name="inkCanvas"/>
         <inkTools:InkToolbar TargetInkCanvas="{x:Bind inkCanvas}" HorizontalAlignment="Right" VerticalAlignment="Top"/>
